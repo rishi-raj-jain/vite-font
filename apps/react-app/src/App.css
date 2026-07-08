@@ -1,0 +1,269 @@
+/* Hallmark · pre-emit critique: P5 H4 E5 S5 R5 V4
+ * macrostructure: Catalogue (numbered specimen) · tone: editorial-technical · anchor hue: violet */
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: var(--space-24) var(--space-8) var(--space-16);
+  border-bottom: 1px solid var(--border);
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+}
+
+.wordmark {
+  font-size: clamp(3.25rem, 12vw, 7rem);
+  line-height: 0.95;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0 0 var(--space-6);
+}
+
+.lede {
+  max-width: var(--measure);
+  font-size: clamp(1.05rem, 2.4vw, 1.375rem);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.lede strong {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+/* ---------- Copy button ---------- */
+.copy {
+  margin-top: var(--space-8);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--text-h);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    border-color 0.18s var(--ease-out),
+    transform 0.12s var(--ease-out);
+}
+.copy::before {
+  content: '$';
+  color: var(--accent);
+  font-weight: 700;
+}
+.copy:hover {
+  border-color: var(--accent-border);
+}
+.copy:active {
+  transform: translateY(1px);
+}
+.copy-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--accent);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.copy[data-state='copied'] {
+  border-color: var(--accent-border);
+}
+.copy[data-state='copied'] .copy-label {
+  background: #16a34a;
+}
+
+/* ---------- Specimen blocks ---------- */
+.block {
+  padding: var(--space-16) var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-12);
+}
+.block-n {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.block-feature {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  min-width: 0;
+}
+
+.block-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.specimen {
+  min-width: 0;
+}
+.specimen-name {
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  line-height: 1;
+  font-weight: 700;
+  color: var(--text-h);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-6);
+  overflow-wrap: anywhere;
+}
+.specimen-line {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  line-height: 1.35;
+  color: var(--text-h);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Aside: tags, note, code ---------- */
+.block-aside {
+  min-width: 0;
+}
+.tags {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.note {
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: var(--space-4);
+}
+.stack {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: var(--space-4);
+}
+.stack code {
+  font-size: 12.5px;
+  color: var(--text-h);
+  overflow-wrap: anywhere;
+}
+.code {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.code code {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  color: var(--text-h);
+}
+
+/* ---------- Under-the-hood notes ---------- */
+.notes {
+  padding: var(--space-16) var(--space-8);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+}
+.notes-title {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-8);
+}
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-8);
+}
+.notes-grid h3 {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: var(--text-h);
+}
+.notes-grid p {
+  color: var(--text);
+  line-height: 1.55;
+  font-size: 15px;
+}
+.notes-grid code {
+  font-size: 12.5px;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text);
+}
+.footer-mark {
+  color: var(--text-h);
+  font-weight: 700;
+}
+.footer-sep {
+  color: var(--border);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 780px) {
+  .hero {
+    padding: var(--space-16) var(--space-6) var(--space-12);
+  }
+  .block,
+  .notes {
+    padding: var(--space-12) var(--space-6);
+  }
+  .block-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+  .notes-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
