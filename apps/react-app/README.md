@@ -1,12 +1,27 @@
-# React + TypeScript + Vite
+# vite-font · React SPA
 
-This template provides a minimal setup to get React working in Vite with HMR.
+**Live: [vite-font.vercel.app](https://vite-font.vercel.app/)**
 
-Currently, two official plugins are available:
+A plain Vite + React SPA that exercises every way `vite-font` can source a font, in one config
+([vite.config.ts](./vite.config.ts)):
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. A **Google font by name + weights** (`Inter`), à la `next/font`.
+2. The same, for a **variable serif** (`Fraunces`).
+3. A **Google Fonts URL** you pasted in (`Space Grotesk`).
+4. A Google font requested with **roman + italic** (`Newsreader`).
+5. **Local `.woff2` files** from `public/fonts` (`Gabarito`).
+6. A **CDN font referenced directly**, not self-hosted (`Afacad`).
+7. A **monospace** exposed as a CSS variable (`JetBrains Mono`).
 
-## React Compiler
+Every family except the CDN one uses `fetch: true`, so its files are downloaded at build time,
+content-hashed, self-hosted from `/assets/vite-font/`, and measured with fontkit to generate a
+metric-matched fallback. Each family's `cssVariable` is consumed from [src/index.css](./src/index.css).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+There is no server here: the plugin injects the preload links and the font CSS straight into
+`index.html`, so `dist/index.html` ships with the fonts already described in its `<head>`.
+
+```bash
+pnpm install
+pnpm dev
+pnpm build && pnpm preview
+```

@@ -8,11 +8,13 @@ A [Vite](https://vite.dev) plugin that optimizes **Local**, **Remote**, **CDN** 
 
 ## Example apps
 
-| App                                  | Shows                                                                                                           |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| [`apps/react-app`](./apps/react-app) | An SPA. Google, local, CDN and URL-based fonts; the plugin injects everything into `index.html`.                |
-| [`apps/ssr-app`](./apps/ssr-app)     | React + Express SSR. The server entry imports `headTags` from `virtual:vite-font` and renders it into `<head>`. |
-| [`apps/astro-app`](./apps/astro-app) | Astro with one prerendered route and one `prerender = false` route, both fed by the same layout.                |
+| App                                  | Live                                                                     | Shows                                                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| [`apps/react-app`](./apps/react-app) | [vite-font.vercel.app](https://vite-font.vercel.app/)                     | An SPA. Google, local, CDN and URL-based fonts; the plugin injects everything into `index.html`.                |
+| [`apps/astro-app`](./apps/astro-app) | [vite-font-astro-app.vercel.app](https://vite-font-astro-app.vercel.app/) | Astro on the Vercel adapter: one prerendered route and one `prerender = false` route, fed by the same layout.   |
+| [`apps/ssr-app`](./apps/ssr-app)     | —                                                                        | React + Express SSR. The server entry imports `headTags` from `virtual:vite-font` and renders it into `<head>`. |
+
+View source on either deployment: the `@font-face` rules, the metric-matched fallbacks and the `<link rel="preload">` tags are in the `<head>` of the HTML as it comes off the wire.
 
 ## Development
 

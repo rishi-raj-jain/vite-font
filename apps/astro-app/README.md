@@ -1,29 +1,37 @@
-# vite-font · Astro (prerendered + on demand)
+# vite-font · Astro on Vercel (prerendered + on demand)
 
-An Astro app with two routes that use the same fonts through the same layout:
+**Live: [vite-font-astro-app.vercel.app](https://vite-font-astro-app.vercel.app/)**
 
-| Route   | Mode                | Rendered                                           |
-| ------- | ------------------- | -------------------------------------------------- |
-| `/`     | `prerender = true`  | Once, at build time, into `dist/client/index.html` |
-| `/live` | `prerender = false` | Per request, by the Node adapter                   |
+An Astro app on the [Vercel adapter](https://docs.astro.build/en/guides/integrations-guide/vercel/) with
+two routes that pull their fonts from the same layout:
+
+| Route   | Mode                | Rendered                                                          |
+| ------- | ------------------- | ----------------------------------------------------------------- |
+| `/`     | `prerender = true`  | Once, at build time, into `.vercel/output/static/index.html`       |
+| `/live` | `prerender = false` | Per request, by the serverless function in `.vercel/output/functions` |
 
 Astro renders its own HTML, so Vite's `transformIndexHtml` hook never runs and the plugin has no HTML
-entry to inject into (`injectHtml: false`). Instead [Layout.astro](./src/layouts/Layout.astro) imports
-`headTags` from `virtual:vite-font` and drops it into `<head>`. That works the same for both routes:
-the prerendered page gets the tags baked into its `.html` file, the on-demand page gets them written
-into the response.
+entry to inject into (hence `injectHtml: false`). Instead [Layout.astro](./src/layouts/Layout.astro)
+imports `headTags` from `virtual:vite-font` and drops it into `<head>`. That works the same for both
+routes: the prerendered page gets the tags baked into its `.html` file on disk, the on-demand page gets
+them written into the response — from CSS that was resolved at build time and bundled into the function,
+not recomputed per request.
 
 ```bash
-npm install
-npm run dev        # http://localhost:4321
-npm run build
-npm run preview    # node ./dist/server/entry.mjs
+pnpm install
+pnpm dev                # http://localhost:4321
+pnpm build              # -> .vercel/output
+pnpm preview            # serve that build output locally
 ```
 
-What to look for after `npm run build`:
+`astro preview` doesn't work with the Vercel adapter (the build output is a static folder plus a
+serverless function, not a server), so [preview.js](./preview.js) does what Vercel's router does: try
+the filesystem first, then hand the request to the function. Deploy for real with `vercel`.
 
-- `dist/client/assets/vite-font/*.woff2` — the local Gabarito files, content-hashed and statically
-  referenced by both routes.
-- `grep '@font-face' dist/client/index.html` — the prerendered route's CSS, already on disk.
-- `curl http://localhost:4321/live` — the on-demand route's response, carrying the identical
-  `<style>` block and the identical font URLs.
+What to look for after `pnpm build`:
+
+- `.vercel/output/static/assets/vite-font/*.woff2` — the local Gabarito files, content-hashed and
+  statically referenced by both routes.
+- `grep '@font-face' .vercel/output/static/index.html` — the prerendered route's CSS, already on disk.
+- `curl http://localhost:4321/live` — the on-demand route's response, carrying the identical `<style>`
+  block and the identical font URLs.

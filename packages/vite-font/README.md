@@ -4,6 +4,13 @@
 
 It is a [Vite](https://vite.dev) plugin inspired by [`astro-font`](https://www.launchfa.st/features/astro-font) and [Next.js Font Optimization](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts). Works with the latest Vite (tested on Vite 8).
 
+## Demos
+
+- **[vite-font.vercel.app](https://vite-font.vercel.app/)** — a Vite SPA ([`apps/react-app`](../../apps/react-app)): Google fonts by name, a pasted Google Fonts URL, local files and a CDN reference, all in one config.
+- **[vite-font-astro-app.vercel.app](https://vite-font-astro-app.vercel.app/)** — Astro on the Vercel adapter ([`apps/astro-app`](../../apps/astro-app)): a prerendered route and an on-demand (`prerender = false`) route sharing one layout.
+
+View source on either one — the `@font-face` rules, the metric-matched fallbacks and the preload links are in the `<head>` of the HTML as it arrives.
+
 ## Installation
 
 ```bash
