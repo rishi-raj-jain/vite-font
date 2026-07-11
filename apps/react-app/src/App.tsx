@@ -87,9 +87,8 @@ export default function App() {
         <p className="eyebrow">Vite plugin · fonts</p>
         <h1 className="wordmark">vite-font</h1>
         <p className="lede">
-          One config for <strong>local</strong>, <strong>remote</strong>, <strong>CDN</strong> and{' '}
-          <strong>Google</strong> fonts — self-hosted, preloaded, and shipped with a metric-matched fallback that
-          eliminates layout shift. Every block below is a different font, loaded a different way.
+          One config for <strong>local</strong>, <strong>remote</strong>, <strong>CDN</strong> and <strong>Google</strong> fonts — self-hosted, preloaded, and shipped with a
+          metric-matched fallback that eliminates layout shift. Every block below is a different font, loaded a different way.
         </p>
         <CopyButton text="npm i -D vite-font" />
       </header>
@@ -268,24 +267,21 @@ export default function App() {
             <article>
               <h3>Subset-aware preload</h3>
               <p>
-                Declare <code>subsets: ['latin']</code> and only those files get a{' '}
-                <code>&lt;link rel="preload"&gt;</code> — the rest still self-host and load on demand via{' '}
+                Declare <code>subsets: ['latin']</code> and only those files get a <code>&lt;link rel="preload"&gt;</code> — the rest still self-host and load on demand via{' '}
                 <code>unicode-range</code>. Shared subsets are preloaded once.
               </p>
             </article>
             <article>
               <h3>Zero-CLS fallback</h3>
               <p>
-                vite-font reads each font's real metrics with fontkit and emits a fallback <code>@font-face</code> with{' '}
-                <code>size-adjust</code> plus ascent / descent overrides, so the swap to the web font doesn't shift your
-                layout.
+                vite-font reads each font's real metrics with fontkit and emits a fallback <code>@font-face</code> with <code>size-adjust</code> plus ascent / descent overrides, so
+                the swap to the web font doesn't shift your layout.
               </p>
             </article>
             <article>
               <h3>Dev + build parity</h3>
               <p>
-                Self-hosted files are served from memory in dev and emitted into <code>dist/</code> for production — the
-                same stable URLs in both, no config drift.
+                Self-hosted files are served from memory in dev and emitted into <code>dist/</code> for production — the same stable URLs in both, no config drift.
               </p>
             </article>
           </div>
@@ -297,7 +293,7 @@ export default function App() {
         <span className="footer-sep">·</span>
         <a href="https://www.npmjs.com/package/vite-font">npm</a>
         <span className="footer-sep">·</span>
-        <a href="https://github.com/rishi-raj-jain/astro-font">GitHub</a>
+        <a href="https://github.com/rishi-raj-jain/vite-font">GitHub</a>
       </footer>
     </>
   )

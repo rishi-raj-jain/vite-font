@@ -65,10 +65,7 @@ export interface FallbackMetrics {
  * Read more about this technique in these texts by the Google Aurora team:
  * https://developer.chrome.com/blog/font-fallbacks/
  */
-export function getFallbackMetricsFromFontFile(
-  font: Font,
-  category: 'serif' | 'monospace' | 'sans-serif' = 'serif',
-): FallbackMetrics {
+export function getFallbackMetricsFromFontFile(font: Font, category: 'serif' | 'monospace' | 'sans-serif' = 'serif'): FallbackMetrics {
   const azAvgWidth = calcAverageWidth(font)
   const fallbackFont = fallbackFonts[category]
   const { ascent, descent, lineGap, unitsPerEm } = font

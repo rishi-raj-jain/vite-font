@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+// Prerendered: this page is rendered once, at build time, into dist/client/index.html.
+// The font CSS and the preload links are baked into that file — open it and you can read them.
+export const prerender = true
+
+const builtAt = new Date().toISOString()
+---
+
+<Layout
+  title="Rendered once, at build time."
+  mode="prerender = true"
+  blurb="Astro wrote this page to disk during `astro build`. The @font-face rules, the metric-matched fallbacks and the preload links are part of the HTML file itself — no request, no server, no client-side font loading step."
+>
+  <section>
+    <article>
+      <h2>Fraunces</h2>
+      <p>Google font pulled from the CDN. The CSS that points at it was generated at build time.</p>
+      <p class="sample" style="font-family: var(--fraunces)">The quick brown fox jumps over the lazy dog</p>
+    </article>
+
+    <article>
+      <h2>Gabarito</h2>
+      <p>
+        Local .woff2 files. They were content-hashed and emitted into the build, so this page references a static, immutable URL under <code>/assets/vite-font/</code>.
+      </p>
+      <p class="sample" style="font-family: var(--gabarito)">Self-hosted, hashed, cached forever</p>
+    </article>
+  </section>
+
+  <p class="stamp">Built at {builtAt} — this timestamp is frozen into the HTML and never changes.</p>
+</Layout>

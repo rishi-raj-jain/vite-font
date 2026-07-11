@@ -1,62 +1,26 @@
 {
-  "name": "vite-font",
-  "version": "0.3.0",
+  "name": "vite-font-monorepo",
+  "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "A Vite plugin to optimize Local, Remote, CDN & Google fonts — self-hosting, preloading, and zero-CLS metric-matched fallbacks. Inspired by astro-font & @next/font.",
+  "description": "Monorepo for vite-font and its example apps.",
   "author": "Rishi Raj Jain",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "keywords": [
-    "vite",
-    "vite-plugin",
-    "fonts",
-    "google-fonts",
-    "font-optimization",
-    "cls",
-    "performance",
-    "perf",
-    "seo"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rishi-raj-jain/astro-font.git",
-    "directory": "packages/vite-font"
-  },
-  "homepage": "https://github.com/rishi-raj-jain/astro-font/tree/master/packages/vite-font#readme",
-  "bugs": {
-    "url": "https://github.com/rishi-raj-jain/astro-font/issues"
-  },
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=20.0.0"
   },
-  "peerDependencies": {
-    "vite": ">=5"
-  },
-  "dependencies": {
-    "fontkit": "^2.0.4"
+  "scripts": {
+    "build": "pnpm -r build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "@types/fontkit": "^2.0.6",
-    "@types/node": "^20.10.5",
-    "rimraf": "^5.0.5",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3",
-    "vite": "^8.1.3"
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1"
   },
-  "scripts": {
-    "build": "rimraf dist && tsup",
-    "dev": "tsup --watch"
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

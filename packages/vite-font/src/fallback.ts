@@ -43,18 +43,13 @@ function getDistanceFromNormalWeight(weight?: string) {
  * for the automatic fallback generation. This returns the font file most likely to be
  * used for the bulk of the text on a page.
  */
-export function pickFontFileForFallbackGeneration<T extends { style?: string; weight?: string; metadata: Font }>(
-  fontFiles: T[],
-): T {
+export function pickFontFileForFallbackGeneration<T extends { style?: string; weight?: string; metadata: Font }>(fontFiles: T[]): T {
   return fontFiles.reduce((usedFontFile, currentFontFile) => {
     if (!usedFontFile) return currentFontFile
     const usedFontDistance = getDistanceFromNormalWeight(usedFontFile.weight)
     const currentFontDistance = getDistanceFromNormalWeight(currentFontFile.weight)
     // Prefer normal style if they have the same weight
-    if (
-      usedFontDistance === currentFontDistance &&
-      (typeof currentFontFile.style === 'undefined' || currentFontFile.style === 'normal')
-    ) {
+    if (usedFontDistance === currentFontDistance && (typeof currentFontFile.style === 'undefined' || currentFontFile.style === 'normal')) {
       return currentFontFile
     }
     const absUsedDistance = Math.abs(usedFontDistance)

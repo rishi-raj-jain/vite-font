@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+// On demand: the Node adapter renders this page per request. The font tags come from the same
+// virtual module, resolved at build time and bundled into the server entry — so the response
+// carries the identical <style> block and preload links, pointing at the identical font URLs.
+export const prerender = false
+
+const renderedAt = new Date().toISOString()
+---
+
+<Layout
+  title="Rendered per request, on the server."
+  mode="prerender = false"
+  blurb="The Node adapter builds this page fresh for every request. The font CSS still ships in the first byte of HTML — it was resolved at build time and bundled into the server, not fetched or computed per request."
+>
+  <section>
+    <article>
+      <h2>Fraunces</h2>
+      <p>Same CDN font, same generated CSS as the prerendered route.</p>
+      <p class="sample" style="font-family: var(--fraunces)">The quick brown fox jumps over the lazy dog</p>
+    </article>
+
+    <article>
+      <h2>Gabarito</h2>
+      <p>Same content-hashed URL as the prerendered route — the file was emitted once into the client build and both routes point at it.</p>
+      <p class="sample" style="font-family: var(--gabarito)">Self-hosted, hashed, cached forever</p>
+    </article>
+  </section>
+
+  <p class="stamp">Rendered at {renderedAt} — reload the page and this changes.</p>
+</Layout>

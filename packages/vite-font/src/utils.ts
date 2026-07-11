@@ -14,8 +14,24 @@ export type FontWeight =
   | 'lighter'
   | 'bolder'
   | GlobalValues
-  | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-  | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 600
+  | 700
+  | 800
+  | 900
+  | '100'
+  | '200'
+  | '300'
+  | '400'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
   | (string & {})
   | (number & {})
 
@@ -83,6 +99,13 @@ export interface FontFamily {
 
 export interface Options {
   config: FontFamily[]
+  /**
+   * Inject the preload links and the font CSS into every HTML entry. Defaults to `true`.
+   *
+   * Set it to `false` when your server renders its own `<head>` and you inject the tags yourself
+   * from the `virtual:vite-font` module — otherwise the CSS ends up in the page twice.
+   */
+  injectHtml?: boolean
 }
 
 const extToPreload: Record<string, string> = {
@@ -121,8 +144,7 @@ async function loadBuffer(path: string, root: string): Promise<Buffer | undefine
   if (isRemote(path)) {
     const res = await fetch(path, {
       headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
       },
     })
     if (!res.ok) return undefined
@@ -211,9 +233,13 @@ function weightSortKey(weight: string): number {
 export function buildGoogleFontsURL(family: FontFamily): string {
   const name = family.name.trim().replace(/ +/g, '+')
   const display = family.display ?? 'swap'
-  const weights = [...new Set(toArray(family.weight).map((w) => normalizeWeight(String(w))).filter(Boolean))].sort(
-    (a, b) => weightSortKey(a) - weightSortKey(b),
-  )
+  const weights = [
+    ...new Set(
+      toArray(family.weight)
+        .map((w) => normalizeWeight(String(w)))
+        .filter(Boolean),
+    ),
+  ].sort((a, b) => weightSortKey(a) - weightSortKey(b))
   const italFlags = [...new Set(toArray(family.style).map((s) => (String(s) === 'italic' ? 1 : 0)))].sort()
   const wantsItalicAxis = italFlags.length > 1 || italFlags[0] === 1
 
@@ -250,8 +276,7 @@ export async function resolveFamily(family: FontFamily, base: string, root: stri
     log(`Fetching Google Fonts CSS: ${googleFontsURL}`)
     const res = await fetch(googleFontsURL, {
       headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
       },
     })
     sourceList = parseGoogleCSS(await res.text())
@@ -271,8 +296,7 @@ export async function resolveFamily(family: FontFamily, base: string, root: stri
     for (const subset of requested) {
       if (!available.has(subset)) {
         console.warn(
-          `[vite-font] "${family.name}": subset "${subset}" was not found in the Google Fonts ` +
-            `response. Available subsets: ${[...available].join(', ') || '(none)'}.`,
+          `[vite-font] "${family.name}": subset "${subset}" was not found in the Google Fonts ` + `response. Available subsets: ${[...available].join(', ') || '(none)'}.`,
         )
       }
     }
@@ -369,9 +393,7 @@ export function createFontCSS(resolved: ResolvedFamily): string {
   const { family, fallback, fallbackName } = resolved
   const out: string[] = []
   const quotedFallback = `'${fallbackName}'`
-  const stack = fallback
-    ? `'${family.name}', ${quotedFallback}, ${family.fallback}`
-    : `'${family.name}', ${family.fallback}`
+  const stack = fallback ? `'${family.name}', ${quotedFallback}, ${family.fallback}` : `'${family.name}', ${family.fallback}`
 
   if (family.selector) out.push(`${family.selector} { font-family: ${stack}; }`)
 
