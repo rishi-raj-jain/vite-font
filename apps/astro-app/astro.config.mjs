@@ -1,5 +1,5 @@
 // @ts-check
-import node from '@astrojs/node'
+import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
 import viteFont from 'vite-font'
 
@@ -9,7 +9,7 @@ import viteFont from 'vite-font'
 // prerendered page (baked into the .html at build time) and an on-demand one (rendered per request).
 // https://astro.build/config
 export default defineConfig({
-  adapter: node({ mode: 'standalone' }),
+  adapter: vercel(),
   vite: {
     plugins: [
       viteFont({
