@@ -1,5 +1,7 @@
 # vite-font
 
+<img src="https://raw.githubusercontent.com/rishi-raj-jain/vite-font/main/banner.svg" alt="vite-font — one config for local, remote, CDN and Google fonts" width="100%">
+
 `vite-font` automatically optimizes your **Local**, **Remote**, **CDN** and **Google** fonts for performance — self-hosting them, preloading them, and generating a metric-matched fallback `@font-face` to eliminate layout shift (CLS).
 
 It is a [Vite](https://vite.dev) plugin inspired by [`astro-font`](https://www.launchfa.st/features/astro-font) and [Next.js Font Optimization](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts). Works with the latest Vite (tested on Vite 8).

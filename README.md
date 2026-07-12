@@ -1,5 +1,7 @@
 # vite-font — monorepo
 
+<img src="./banner.svg" alt="vite-font — one config for local, remote, CDN and Google fonts" width="100%">
+
 A [Vite](https://vite.dev) plugin that optimizes **Local**, **Remote**, **CDN** and **Google** fonts — self-hosting them, preloading them, and generating metric-matched fallbacks to eliminate layout shift (CLS).
 
 | Package                                      | What it is                                                      |
