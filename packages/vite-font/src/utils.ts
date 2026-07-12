@@ -274,13 +274,43 @@ export async function resolveFamily(family: FontFamily, base: string, root: stri
   let sourceList = family.src ?? []
   if (googleFontsURL) {
     log(`Fetching Google Fonts CSS: ${googleFontsURL}`)
-    const res = await fetch(googleFontsURL, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-      },
-    })
+
+    // Fail loudly. Google answers an unknown family or an invalid axis value with a 400 and an
+    // HTML error page, which parses to zero @font-face rules — so without these checks the build
+    // would happily succeed and ship a page with no web fonts at all.
+    //
+    // These messages carry no `[vite-font]` prefix on purpose: Vite already attributes a thrown
+    // plugin error to the plugin, and prefixing here would print it twice.
+    let res: Response
+    try {
+      res = await fetch(googleFontsURL, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+        },
+      })
+    } catch (e) {
+      throw new Error(`Google Fonts request for "${family.name}" could not be sent:\n  ${googleFontsURL}\n` + `  ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    if (!res.ok) {
+      throw new Error(
+        `Google Fonts request for "${family.name}" failed: ${res.status} ${res.statusText}\n  ${googleFontsURL}\n` +
+          `  Google returns 400 for an unknown family name or an invalid \`weight\`/\`style\`. ` +
+          `Check that "${family.name}" is spelled exactly as it is on fonts.google.com, and that the weights you asked for are ones it actually offers.`,
+      )
+    }
+
     sourceList = parseGoogleCSS(await res.text())
     log(`Parsed ${sourceList.length} @font-face rules from Google Fonts for "${family.name}"`)
+
+    // A 2xx that yields no @font-face rules means we did not get the CSS we expected. Treat it the
+    // same way rather than silently emitting a family with no files behind it.
+    if (sourceList.length === 0) {
+      throw new Error(
+        `Google Fonts returned no @font-face rules for "${family.name}":\n  ${googleFontsURL}\n` +
+          `  The response parsed to zero font files, so this family would have shipped with no web fonts at all.`,
+      )
+    }
 
     // Mirror next/font: preloading a Google font requires you to opt into subsets.
     const requested = family.subsets ?? []
@@ -302,36 +332,47 @@ export async function resolveFamily(family: FontFamily, base: string, root: stri
     }
   }
 
-  const metricInputs: { style?: string; weight?: string; metadata: Font }[] = []
+  type MetricInput = { style?: string; weight?: string; metadata: Font }
 
-  const sources: ResolvedSource[] = await Promise.all(
-    sourceList.map(async (src): Promise<ResolvedSource> => {
+  // Each file is loaded concurrently, but the metric inputs must stay in `sourceList` order:
+  // every subset of a variable family ties on weight and style, so `pickFontFileForFallbackGeneration`
+  // settles the tie on position. Pushing from inside these callbacks would order them by download
+  // completion instead, and the fallback would be measured from whichever subset happened to land
+  // last — a different `size-adjust` on every build. `Promise.all` preserves input order, so
+  // collecting the metrics from its result keeps the choice deterministic (and lands on `latin`,
+  // which Google returns last).
+  const loaded = await Promise.all(
+    sourceList.map(async (src): Promise<{ source: ResolvedSource; metric?: MetricInput }> => {
       // Remote file the user does NOT want self-hosted: reference it directly.
       if (isRemote(src.path) && !family.fetch) {
-        return { ...src, url: src.path }
+        return { source: { ...src, url: src.path } }
       }
 
       const buffer = await loadBuffer(src.path, root)
       if (!buffer) {
         log(`Could not load "${src.path}" — referencing it as-is`)
-        return { ...src, url: src.path }
+        return { source: { ...src, url: src.path } }
       }
 
       // Collect metrics from the real font bytes. `create` returns a Font, or a FontCollection
       // (.ttc) whose first face we use for metric matching.
+      let metric: MetricInput | undefined
       try {
         const parsed = create(buffer)
         const font = ('fonts' in parsed ? parsed.fonts[0] : parsed) as Font
-        metricInputs.push({ style: src.style, weight: src.weight?.toString(), metadata: font })
+        metric = { style: src.style, weight: src.weight?.toString(), metadata: font }
       } catch (e) {
         log(`Failed to read metrics from "${src.path}"`)
       }
 
       const ext = getExt(src.path) ?? 'woff2'
       const assetName = `${ASSET_DIR}/${contentHash(buffer)}.${ext}`
-      return { ...src, buffer, assetName, url: base + assetName }
+      return { source: { ...src, buffer, assetName, url: base + assetName }, metric }
     }),
   )
+
+  const sources: ResolvedSource[] = loaded.map(({ source }) => source)
+  const metricInputs: MetricInput[] = loaded.map(({ metric }) => metric).filter((metric): metric is MetricInput => metric !== undefined)
 
   let fallback: FallbackMetrics | undefined
   if (metricInputs.length > 0) {

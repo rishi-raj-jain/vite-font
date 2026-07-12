@@ -87,9 +87,19 @@ export default function viteFont(options: Options): Plugin {
     // Only the client build serves files to the browser, so the SSR pass skips this: its output is
     // a JS bundle nobody fetches fonts from, and the URLs baked into the CSS (`<base>assets/…`)
     // point at the client output either way.
+    //
+    // Under the Environment API (Vite 6+) a single build runs several environments and
+    // `configResolved` fires once per environment, so the closure flags above hold whichever
+    // environment resolved last — usually the SSR one, which would wrongly skip the client's
+    // emit and leave every `/assets/vite-font/…` URL in the CSS pointing at nothing. Prefer the
+    // per-environment config here, and fall back to the flags on Vite 5, which has no
+    // `this.environment`.
     async buildStart() {
       if (!isBuild) return
-      if (isSsrBuild && !ssrEmitAssets) return
+      const env = this.environment
+      const isServerEnv = env ? env.config.consumer !== 'client' : isSsrBuild
+      const emitAssets = env ? Boolean(env.config.build?.ssrEmitAssets) : ssrEmitAssets
+      if (isServerEnv && !emitAssets) return
       const families = await resolveAll()
       for (const family of families) {
         for (const source of family.sources) {

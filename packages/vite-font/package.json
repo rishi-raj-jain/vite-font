@@ -1,6 +1,6 @@
 {
   "name": "vite-font",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
   "license": "MIT",
   "description": "A Vite plugin to optimize Local, Remote, CDN & Google fonts — self-hosting, preloading, and zero-CLS metric-matched fallbacks. Inspired by astro-font & @next/font.",
